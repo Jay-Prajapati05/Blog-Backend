@@ -1,0 +1,14 @@
+import express from "express";
+ const router = express.Router();
+
+ router.get("/",(req,res)=>{
+    res.json({message: "GET ALL POSTS"});
+ });
+ router.get("/:id",(req,res)=>{
+    res.json({
+  "success": true,
+  "data": []
+})
+ });
+
+ export default router;
