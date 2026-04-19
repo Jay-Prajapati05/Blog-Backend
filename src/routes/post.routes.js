@@ -1,14 +1,21 @@
 import express from "express";
- const router = express.Router();
+import { createPost, getAllPosts } from "../controllers/post.controller.js";
 
- router.get("/",(req,res)=>{
-    res.json({message: "GET ALL POSTS"});
- });
- router.get("/:id",(req,res)=>{
-    res.json({
-  "success": true,
-  "data": []
-})
- });
+const router = express.Router();
 
- export default router;
+
+router.get("/", (req, res) => {
+  res.json({ message: "GET ALL POSTS" });
+});
+
+// router.get("/:id", (req, res) => {
+//   res.json({
+//     success: true,
+//     data: [],
+//   });
+
+router.post("/createpost",createPost);
+router.get("/allpost",getAllPosts);
+
+
+export default router;
