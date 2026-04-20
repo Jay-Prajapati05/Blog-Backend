@@ -1,5 +1,7 @@
 import express from "express";
-import { createPost, deletepost, getAllPosts, getSinglePost } from "../controllers/post.controller.js";
+import { createPost, deletepost, getAllPosts, getSinglePost} from "../controllers/post.controller.js";
+import { login, register } from "../controllers/auth.controller.js";
+import { authMiddleware } from "../middlwares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -14,10 +16,12 @@ router.get("/", (req, res) => {
 //     data: [],
 //   });
 
-router.post("/createpost",createPost);
+router.post("/createpost",authMiddleware,createPost);
 router.get("/allpost",getAllPosts);
 router.get("/single/:id",getSinglePost);
 router.get("/deletepost/:id",deletepost);
+router.post("/register",register);
+router.post("/login",login);
 
 
 export default router;
