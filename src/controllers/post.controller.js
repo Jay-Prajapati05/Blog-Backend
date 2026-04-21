@@ -1,5 +1,5 @@
 import {Post} from "../models/posts.model.js";
-
+import asyncHandler from "../middlwares/asyncHandler.js";
 // Create Post
  const createPost = async (req, res) => {
   try {
@@ -31,19 +31,64 @@ import {Post} from "../models/posts.model.js";
   }
 };
 
-// Get All Posts
- const getAllPosts = async (req, res) => {
+// Get All Posts old code
+//  const getAllPosts = async (req, res) => {
+//   try {
+//     const posts = await Post.find();
+
+//     res.json({
+//       success: true,
+//       data: posts,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+// add pagination
+
+
+const getAllPosts = async (req,res)=>{
   try {
-    const posts = await Post.find();
+    
+    // query params
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+
+    const skip = (page-1) * limit;
+
+    // DB QUERY 
+
+    const search = req.query.search || "";
+
+    const searchQuery = search
+  ? { title: { $regex: search, $options: "i" } }
+  : {};
+
+    const posts = await Post.find(searchQuery)
+    .skip(skip)
+    .limit(limit)
+    .sort({createdAt: -1})
+
+    // total count 
+
+    const total = await Post.countDocuments(searchQuery);
 
     res.json({
       success: true,
+      page,
+      totalPages: Math.ceil(total/limit),
       data: posts,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
+
     });
   }
 };
